@@ -45,6 +45,7 @@ func NewCrawler(ID int, webPage string, channels *models.CommunitationChans, log
 	}, nil
 }
 
+// ExtractLinks extracts links from a web page.
 func (c *Crawler) ExtractLinks() error {
 	defer c.returnWorker()
 
@@ -78,11 +79,13 @@ func (c *Crawler) ExtractLinks() error {
 	}
 }
 
+// returnWorker signals that a worker has finished.
 func (c Crawler) returnWorker() {
 	c.workers <- c.ID
 	c.finished <- 1
 }
 
+// SpinUpCrawler initiates the crawling process.
 func (c *Crawler) SpinUpCrawler() {
 	err := c.ExtractLinks()
 	if err != nil {
@@ -90,6 +93,7 @@ func (c *Crawler) SpinUpCrawler() {
 	}
 }
 
+// extractTagLink extracts links from HTML tokens.
 func (c *Crawler) extractTagLink(token html.Token) (*string, error) {
 	var link *string
 	if token.Data == "a" {
@@ -118,6 +122,7 @@ func (c *Crawler) extractTagLink(token html.Token) (*string, error) {
 	return link, nil
 }
 
+// parseURL parses a string URL into a *url.URL object.
 func (c *Crawler) parseURL(strUrl string) (*url.URL, error) {
 	url, err := url.Parse(strUrl)
 	if err != nil {
@@ -131,6 +136,7 @@ func (c *Crawler) parseURL(strUrl string) (*url.URL, error) {
 	return url, nil
 }
 
+// checkURL checks if a URL is valid for crawling.
 func (c *Crawler) checkURL(url *url.URL) bool {
 	if !url.IsAbs() {
 		return false
