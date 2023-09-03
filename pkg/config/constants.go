@@ -6,6 +6,6 @@ const (
 	keyWorkers = "TOCK_MESSAGE"
 
 	// default values
-	defaultWebPage = "example.com"
-	defaultWorkers = 5
+	defaultWebPage = "https://altus.cr"
+	defaultWorkers = 50
 )
