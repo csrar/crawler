@@ -7,6 +7,7 @@ package mock_store
 import (
 	reflect "reflect"
 
+	models "github.com/csrar/crawler/internal/models"
 	gomock "github.com/golang/mock/gomock"
 )
 
@@ -31,6 +32,20 @@ func NewMockICrawlerStore(ctrl *gomock.Controller) *MockICrawlerStore {
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockICrawlerStore) EXPECT() *MockICrawlerStoreMockRecorder {
 	return m.recorder
+}
+
+// StoreData mocks base method.
+func (m *MockICrawlerStore) StoreData(site string, data models.SiteStore) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "StoreData", site, data)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// StoreData indicates an expected call of StoreData.
+func (mr *MockICrawlerStoreMockRecorder) StoreData(site, data interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StoreData", reflect.TypeOf((*MockICrawlerStore)(nil).StoreData), site, data)
 }
 
 // WasAlreadyVisited mocks base method.

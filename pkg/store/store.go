@@ -6,7 +6,6 @@ import (
 	"sync"
 
 	"github.com/csrar/crawler/internal/models"
-	"github.com/dsnet/golib/memfile"
 	"github.com/gosimple/slug"
 )
 
@@ -21,9 +20,9 @@ type store struct {
 	mu      *sync.Mutex
 }
 
-func NewMemfileStore(mu *sync.Mutex) ICrawlerStore {
+func NewMemfileStore(mu *sync.Mutex, file ImFile) ICrawlerStore {
 	return &store{
-		visited: memfile.New([]byte{}),
+		visited: file,
 		mu:      mu,
 	}
 }

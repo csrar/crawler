@@ -8,6 +8,7 @@ import (
 	"github.com/csrar/crawler/internal/models"
 	"github.com/csrar/crawler/pkg/config"
 	"github.com/csrar/crawler/pkg/store"
+	"github.com/dsnet/golib/memfile"
 )
 
 type Ibootstrap interface {
@@ -30,7 +31,7 @@ func NewBootstrap(config config.IConfig) Ibootstrap {
 
 // BoostrapStore initializes and configures the crawler store.
 func (b boot) BoostrapStore() (store.ICrawlerStore, error) {
-	store := store.NewMemfileStore(&sync.Mutex{})
+	store := store.NewMemfileStore(&sync.Mutex{}, memfile.New([]byte{}))
 	err := store.StoreData("", models.SiteStore{
 		Sites: map[string]bool{},
 	})
