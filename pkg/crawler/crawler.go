@@ -114,7 +114,7 @@ func (c *Crawler) extractTagLink(token html.Token) (*string, error) {
 					}
 
 				} else {
-					fmt.Println("some error")
+					c.logger.Error(fmt.Errorf("error worker: %d - found invalid link:%s", c.ID, attr.Val))
 				}
 			}
 		}
