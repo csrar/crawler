@@ -12,7 +12,7 @@ func TestNewLogrusLogger(t *testing.T) {
 	assert.NotNil(t, logger)
 }
 
-func Test_Logger_Info(t *testing.T) {
+func TestLoggerInfo(t *testing.T) {
 	defer func() {
 		if r := recover(); r != nil {
 			t.Errorf("Panic logging info")
@@ -22,7 +22,7 @@ func Test_Logger_Info(t *testing.T) {
 	logger.Info("mock-info")
 }
 
-func Test_Logger_Warn(t *testing.T) {
+func TestLoggerWarn(t *testing.T) {
 	defer func() {
 		if r := recover(); r != nil {
 			t.Errorf("Panic logging warn")
@@ -32,7 +32,7 @@ func Test_Logger_Warn(t *testing.T) {
 	logger.Warn("mock-warn")
 }
 
-func Test_Logger_Error(t *testing.T) {
+func TestLoggerError(t *testing.T) {
 	defer func() {
 		if r := recover(); r != nil {
 			t.Errorf("Panic logging error")

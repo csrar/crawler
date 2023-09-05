@@ -10,7 +10,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func Test_Store_WasAlreadyVisited(t *testing.T) {
+func TestWasAlreadyVisited(t *testing.T) {
 	cases := []struct {
 		name           string
 		inVisitedSite  string
