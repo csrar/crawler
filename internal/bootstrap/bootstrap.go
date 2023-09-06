@@ -53,7 +53,7 @@ func (b boot) BootsRootPage() (*url.URL, error) {
 // BootstrapChannels creates communication channels for the crawler.
 func (b boot) BootstrapChannels() *models.CommunitationChans {
 	return &models.CommunitationChans{
-		Queue:    make(chan string, 100000),
+		Queue:    make(chan string, b.config.GetConfig().QueueSize),
 		Workers:  make(chan int, b.config.GetConfig().Workers),
 		Finished: make(chan int),
 	}

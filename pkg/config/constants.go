@@ -2,10 +2,11 @@ package config
 
 const (
 	// environment variables names
-	keyWebPage = "TICK_MESSAGE"
-	keyWorkers = "TOCK_MESSAGE"
+	keyWebPage = "WEB_PAGE"
+	keyWorkers = "WORKERS"
 
 	// default values
-	defaultWebPage = "https://altus.cr"
-	defaultWorkers = 50
+	defaultWebPage   = "https://parserdigital.com/"
+	defaultWorkers   = 10
+	detaultQueueSize = 100000
 )

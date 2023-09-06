@@ -21,6 +21,7 @@ func NewConfig() IConfig {
 	cfg := models.Config{}
 	cfg.WepPage = getStringVal(keyWebPage, defaultWebPage)
 	cfg.Workers = getIntValue(keyWorkers, defaultWorkers)
+	cfg.QueueSize = detaultQueueSize
 	return &config{
 		cfg: cfg,
 	}

@@ -1,8 +1,9 @@
 package models
 
 type Config struct {
-	Workers int
-	WepPage string
+	Workers   int
+	WepPage   string
+	QueueSize int
 }
 
 type SiteStore struct {
