@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"sync"
+	"time"
 
 	boot "github.com/csrar/crawler/internal/bootstrap"
 	"github.com/csrar/crawler/internal/service"
@@ -16,6 +17,7 @@ func main() {
 	log := logger.NewLogrusLogger()
 	config := config.NewConfig()
 	boot := boot.NewBootstrap(config)
+	startTime := time.Now()
 
 	// Bootstrap root page
 	page, err := boot.BootsRootPage()
@@ -59,6 +61,9 @@ func main() {
 	go handler.ValidateCrawlFinish()
 
 	wg.Wait()
-	log.Info(fmt.Sprintf("finished crawling for %s, total liks explored: %d", page.String(), processed))
+	// Calculate the elapsed time just before exiting
+	elapsedTime := time.Since(startTime)
+
+	log.Info(fmt.Sprintf("finished crawling for [%s], total liks explored: [%d], elapsed seconds: [%.2f]", page.String(), processed, elapsedTime.Seconds()))
 
 }
