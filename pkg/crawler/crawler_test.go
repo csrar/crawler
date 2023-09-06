@@ -332,3 +332,53 @@ func TestExtractLinks(t *testing.T) {
 		})
 	}
 }
+
+func BenchmarkSpinUpCrawler(b *testing.B) {
+	b.StopTimer()
+
+	l, err := net.Listen("tcp", "127.0.0.1:")
+	host := fmt.Sprintf("http://%s", l.Addr().String())
+	handler := func(w http.ResponseWriter, r *http.Request) {
+		// Set response headers.
+		w.Header().Set("Content-Type", "text/html")
+		w.WriteHeader(http.StatusOK)
+
+		// Write the static HTML content to the response.
+		body := `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Example HTML Page</title></head><body><header><h1>mock Website</h1><nav><ul><li><a href="%host%">Home</a></li><li><a href="%host%/about">About Us</a></li><li><a href="%host%/contact">Contact</a></li></ul></nav></header><section><h2>About Us</h2><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla eget risus eu purus efficitur ullamcorper.</p></section><section><h2>Our Services</h2><ul><li><a href="%host%/test">Service 1</a></li><li><a href="%host%/demo">Service 2</a></li><li><a href="%host%/foo">Service 3</a></li></ul></section><footer><p>&copy; 2023 My mock website. All rights reserved.</p></footer></body></html>`
+		htmlContent := strings.ReplaceAll(body, "%host%", host)
+		fmt.Fprintln(w, htmlContent)
+	}
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Create and configure the test HTTP server.
+	testServer := httptest.NewUnstartedServer(http.HandlerFunc(handler))
+	testServer.Listener.Close()
+	testServer.Listener = l
+
+	// Start the server.
+	testServer.Start()
+	// Create and configure mock objects
+	ctrl := gomock.NewController(b)
+	defer ctrl.Finish()
+
+	logMock := mock_logger.NewMockIlogger(ctrl)
+	logMock.EXPECT().Info(gomock.Any()).AnyTimes()
+	logMock.EXPECT().Error(gomock.Any()).AnyTimes()
+
+	storeMock := mock_store.NewMockICrawlerStore(ctrl)
+	storeMock.EXPECT().WasAlreadyVisited(gomock.Any()).Return(false, nil).AnyTimes()
+
+	ch := &models.CommunitationChans{
+		Queue:    make(chan string, 5),
+		Workers:  make(chan int, 1),
+		Finished: make(chan int, 1),
+	}
+
+	// Create and run the crawler.
+	b.StartTimer()
+	crawler, _ := NewCrawler(1, testServer.URL, ch, logMock, storeMock)
+	crawler.SpinUpCrawler()
+}
